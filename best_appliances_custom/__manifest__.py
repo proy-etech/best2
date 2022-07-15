@@ -17,6 +17,7 @@
     ],
     'data': [
         'views/sale_order_best_appliances_report.xml',
+        'views/account_move_views.xml',
         'views/purchase_order_best_appliances_report.xml',
         'views/account_move_best_appliances_report.xml',
         'views/stock_picking_best_appliances_report.xml',
