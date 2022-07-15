@@ -110,7 +110,9 @@
                                         <span t-field="o.partner_id.city_id.name"/>
                                     </td>
                                     <t t-if="o.l10n_latam_document_type_id.code in ['01', '03', '07']">
-                                        <td style="width: 10%;">Guía:</td>
+                                       <td style="width: 10%;">Guía:</td>
+                                       <td style="width: 20%;"><span t-field="o.guiaalmtransp"/></td>
+                                        <!--
                                         <t t-set="guia" t-value=""/>
                                         <t t-if="o.invoice_origin">
                                             <t t-set="picking" t-value="request.env['stock.picking'].search([('sale_id.name', '=', o.invoice_origin), ('state', '!=', 'cancel')])"/>
@@ -118,6 +120,7 @@
                                                 <t t-set="guia" t-value="picking[0].name"/>
                                             </t>
                                         </t>
+                                        -->
                                         <td style="width: 20%;"><t t-esc="guia"/></td>
                                     </t>
                                     <t t-else="">
