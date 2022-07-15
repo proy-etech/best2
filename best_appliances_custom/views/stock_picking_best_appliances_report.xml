@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <report id="stock_picking_best_appliances_report_action"
+            string="Formato Best Appliances"
+            model="stock.picking"
+            report_type="qweb-pdf"
+            name="best_appliances_custom.stock_picking_best_appliances_report_template"
+            file="best_appliances_custom.stock_picking_best_appliances_report_template"
+            print_report_name="'Comprobante %s' % (object.name)"/>
+
+    <template id="stock_picking_best_appliances_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-8">
+                                <div>
+                                    <div style="font-size: 30px; padding-bottom: 10px;">
+                                        <span t-field="o.company_id.name"/>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div>
+                                        <strong style="padding-left: 100px; font-size: 13px;">MOTIVO DE TRASLADO</strong>
+                                    </div>
+                                    <table class="table-sm" style="width: 100%; line-height: 1;">
+                                        <tr>
+                                            <td style="width: 2%"><span style="font-size: 10px;">1.</span></td>
+                                            <td style="width: 22%"><span style="font-size: 10px;">VENTA</span></td>
+                                            <td style="width: 5%"><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <td style="width: 2%"><span style="font-size: 10px;">5.</span></td>
+                                            <td style="width: 40%"><span style="font-size: 10px;">TRASLADO ENTRE SUCURSALES</span></td>
+                                            <td style="width: 5%"><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <td class="text-center" style="width: 24%"><span style="font-size: 10px;">FECHA DE EMISION</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span style="font-size: 10px;">2.</span></td>
+                                            <td><span style="font-size: 10px;">VENTA CON ENTREGA A TERCEROS</span></td>
+                                            <td><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <td><span style="font-size: 10px;">6.</span></td>
+                                            <td><span style="font-size: 10px;">VENTA SUJETA A CONFIRMACION POR EL COMPRADOR</span></td>
+                                            <td><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <t t-if="o.scheduled_date">
+                                                <td class="text-center" style="font-size: 10px;"><t t-esc="o.scheduled_date.strftime('%d/%m/%Y')"/></td>
+                                            </t>
+                                            <t t-else="">
+                                                <td> </td>
+                                            </t>
+                                        </tr>
+                                        <tr>
+                                            <td><span style="font-size: 10px;">3.</span></td>
+                                            <td><span style="font-size: 10px;">CONSIGNACION</span></td>
+                                            <td><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <td><span style="font-size: 10px;">7.</span></td>
+                                            <td><span style="font-size: 10px;">OTROS</span></td>
+                                            <td><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <td class="text-center" style="width: 24%"><span style="font-size: 10px;">FECHA DE TRASLADO</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span style="font-size: 10px;">4.</span></td>
+                                            <td><span style="font-size: 10px;">DEVOLUCION</span></td>
+                                            <td><div style="border: 1px solid black; height: 11px;"/> </td>
+                                            <td><span style="font-size: 10px;"> </span></td>
+                                            <td><span style="font-size: 10px;"> </span></td>
+                                            <td> </td>
+                                            <t t-if="o.date_done">
+                                                <td class="text-center" style="font-size: 10px;"><t t-esc="o.date_done.strftime('%d/%m/%Y')"/></td>
+                                            </t>
+                                            <t t-else="">
+                                                <td> </td>
+                                            </t>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="col-4" style="border: 2px solid black;">
+                                <div>
+                                    <div style="padding-top: 15px;"/>
+                                </div>
+                                <div class="text-center" style="font-size: 22px;">
+                                    <strong>RUC Nº: <span t-field="o.company_id.partner_id.vat"/></strong>
+                                </div>
+                                <div class="text-center" style="font-size: 22px; padding-top: 10px;">
+                                    <span><strong>GUIA DE REMISION REMITENTE</strong></span>
+                                </div>
+                                <div class="text-center" style="font-size: 22px; padding-top: 10px;">
+                                    <strong>N° <span t-field="o.name"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                        <img t-att-src="'best_appliances_custom/static/src/img/fondo.png'" style="position:fixed; z-index:-1; top:800px; padding-left:550px;"/>
+                    </div>
+                    <div class="page">
+                        <table class="table-sm" style="width: 100%;">
+                            <tr>
+                                <td style="width: 50%" class="text-center">Nº COMPROBANTE: <span t-field="o.origin"/></td>
+                                <td style="width: 50%"></td>
+                            </tr>
+                        </table>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tr>
+                                <td colspan="2" style="width: 50%; border-right: 1px solid black;" class="text-center"><strong>DATOS DEL DESTINATARIO</strong></td>
+                                <td colspan="2" style="width: 50%; border-right: 1px solid black;" class="text-center"><strong>DATOS DEL TRANSPORTISTA</strong></td>
+                            </tr>
+                            <tr style="font-size: 12px;">
+                                <td style="width: 35%; border-top: 1px solid black;">NOMBRE: <span t-field="o.partner_id.name"/></td>
+                                <td class="text-right" style="width: 15%; border-top: 1px solid black; border-right: 1px solid black;"><span t-field="o.partner_id.l10n_latam_identification_type_id.name"/>: <span t-field="o.partner_id.vat"/></td>
+                                <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">NOMBRE: <span t-field="o.transportista_id.name"/></td>
+                            </tr>
+                            <tr style="font-size: 12px;">
+                                <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">DOMICILIO: <span t-field="o.partner_id.street"/> <span t-field="o.partner_id.l10n_pe_district.name"/></td>
+                                <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">DOMICILIO: <span t-field="o.transportista_id.street"/> <span t-field="o.transportista_id.l10n_pe_district.name"/></td>
+                            </tr>
+                            <tr style="font-size: 12px;">
+                                <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">PUNTO DE PARTIDA: </td>
+                                <td style="width: 20%; border-top: 1px solid black;">RUC: <span t-field="o.transportista_id.vat"/></td>
+                                <td style="width: 30%; border-top: 1px solid black; border-right: 1px solid black;">Nº LIC. CONDUCIR: <span t-field="o.licencia"/></td>
+                            </tr>
+                            <tr style="font-size: 12px;">
+                                <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">PUNTO DE LLEGADA: </td>
+                                <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">PLACA VEHICULO Nº: <span t-field="o.placa"/></td>
+                            </tr>
+                            <tr style="font-size: 12px;">
+                                 <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;"> </td>
+                                 <td colspan="2" style="width: 50%; border-top: 1px solid black; border-right: 1px solid black;">Nº CONST. INSCRIPCION: <span t-field="o.inscripcion"/></td>
+                            </tr>
+                        </table>
+                        <table class="table-sm" style="width: 100%; border-bottom: 1px solid black; border-left: 1px solid black;">
+                            <tr>
+                                <td class="text-center" style="width: 25%; border-right: 1px solid black;">CODIGO</td>
+                                <td class="text-center" style="width: 45%; border-right: 1px solid black;">DESCRIPCIÓN</td>
+                                <td class="text-center" style="width: 10%; border-right: 1px solid black;">UNIDAD</td>
+                                <td class="text-center" style="width: 10%; border-right: 1px solid black;">CANTIDAD</td>
+                                <td class="text-center" style="width: 10%; border-right: 1px solid black;">PESO</td>
+                            </tr>
+                            <tr t-foreach="o.move_ids_without_package" t-as="l" style="font-size: 14px;">
+                                <td class="text-center" style="border-right: 1px solid black; border-top: 1px solid black;"><span t-field="l.product_id.default_code"/></td>
+                                <td class="text-center" style="border-right: 1px solid black; border-top: 1px solid black;"><span t-field="l.product_id.name"/></td>
+                                <td class="text-center" style="border-right: 1px solid black; border-top: 1px solid black;"><span t-field="l.product_uom.name"/></td>
+                                <td class="text-center" style="border-right: 1px solid black; border-top: 1px solid black;"><span t-field="l.quantity_done"/></td>
+                                <td style="border-right: 1px solid black; border-top: 1px solid black;"> </td>
+                            </tr>
+                        </table>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black; margin-top: 10px;">
+                            <tr style="font-size: 13px;">
+                                <td style="width: 33%; border-right: 1px solid black;" class="text-center"><strong>REMITENTE</strong></td>
+                                <td style="width: 33%; border-right: 1px solid black;" class="text-center"><strong>TRANSPORTISTA</strong></td>
+                                <td style="width: 34%; border-right: 1px solid black;" class="text-center"><strong>DESTINATARIO</strong></td>
+                            </tr>
+                            <tr style="font-size: 13px;">
+                                <td style="width: 33%; border-right: 1px solid black;" class="text-center"><br/>______________________________________<br/><strong>FIRMA</strong></td>
+                                <td style="width: 33%; border-right: 1px solid black;" class="text-center"><br/>______________________________________<br/><strong>FIRMA</strong></td>
+                                <td style="width: 34%; border-right: 1px solid black;" class="text-center"><br/>______________________________________<br/><strong>FIRMA</strong></td>
+                            </tr>
+                        </table>
+                    </div>
+
+                    <div class="footer">
+                        <div>
+                            <div style="font-size: 18px; padding-bottom: 5px;">
+                                <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                    <center>
+                                        <i class="fa fa-map-marker" aria-hidden="true" style="color: white"/>
+                                    </center>
+                                </div>
+                                <div style="display: inline-block; padding-left: 20px;">
+                                    <span>Av. José Gálvez Barrenechea Of. 401 San Isidro, Lima</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 18px; padding-bottom: 5px;">
+                                <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                    <center>
+                                        <i class="fa fa-whatsapp" aria-hidden="true" style="color: white"/>
+                                    </center>
+                                </div>
+                                <div style="display: inline-block; padding-left: 20px;">
+                                    <span t-field="o.company_id.partner_id.mobile"/>
+                                </div>
+                            </div>
+                            <div style="font-size: 18px; padding-bottom: 5px;">
+                                <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                    <center>
+                                        <i class="fa fa-map-marker" aria-hidden="true" style="color: white"/>
+                                    </center>
+                                </div>
+                                <div style="display: inline-block; padding-left: 20px;">
+                                    <span>Almacén: Av. Marco Puente Llanos Mz. "B" Lt. 3 Urb. Barbadillo Ate - Lima</span>
+                                </div>
+                            </div>
+                            <div style="font-size: 18px; padding-bottom: 5px;">
+                                <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                    <center>
+                                        <i class="fa fa-phone" aria-hidden="true" style="color: white"/>
+                                    </center>
+                                </div>
+                                <div style="display: inline-block; padding-left: 20px;">
+                                    <span>(51) 462 6888</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="stock_picking_best_appliances_paperformat" model="report.paperformat">
+        <field name="name">Formato Best Appliances</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">32</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">45</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(6, 0, [ref('best_appliances_custom.stock_picking_best_appliances_report_action')])]"/>
+    </record>
+
+</odoo>

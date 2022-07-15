@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <report id="account_move_best_appliances_report_action"
+            string="Formato Best Appliances"
+            model="account.move"
+            report_type="qweb-pdf"
+            name="best_appliances_custom.account_move_best_appliances_report_template"
+            file="best_appliances_custom.account_move_best_appliances_report_template"
+            print_report_name="'Comprobante %s' % (object.name)"/>
+
+    <template id="account_move_best_appliances_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-8">
+                                <div>
+                                    <div style="font-size: 30px; padding-bottom: 10px;">
+                                        <span t-field="o.company_id.name"/>
+                                    </div>
+                                    <div style="font-size: 18px; padding-bottom: 5px; padding-left: 10px;">
+                                        <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                            <center>
+                                                <i class="fa fa-map-marker" aria-hidden="true" style="color: white"/>
+                                            </center>
+                                        </div>
+                                        <div style="display: inline-block; padding-left: 20px;">
+                                            <span>Av. José Gálvez Barrenechea Of. 401 San Isidro, Lima</span>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 18px; padding-bottom: 5px; padding-left: 10px;">
+                                        <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                            <center>
+                                                <i class="fa fa-envelope" aria-hidden="true" style="color: white"/>
+                                            </center>
+                                            <div>
+                                                <span style="color: white">BA</span>
+                                            </div>
+                                        </div>
+                                        <div style="display: inline-block; padding-left: 20px;">
+                                            <span >administracion@best-appliances.net</span><br/>
+                                            <span>logistica@best-appliances.net</span>
+                                        </div>
+                                    </div>
+                                    <div style="font-size: 18px; padding-bottom: 5px; padding-left: 10px;">
+                                        <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                            <center>
+                                                <i class="fa fa-whatsapp" aria-hidden="true" style="color: white"/>
+                                            </center>
+                                        </div>
+                                        <div style="display: inline-block; padding-left: 20px;">
+                                            <span t-field="o.company_id.partner_id.mobile"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-4" style="border: 2px solid black;">
+                                <div>
+                                    <t t-if="o.l10n_latam_document_type_id.code in ['01', '03']">
+                                        <div style="padding-top: 30px;"/>
+                                    </t>
+                                    <t t-else="">
+                                        <div style="padding-top: 13px;"/>
+                                    </t>
+                                </div>
+                                <div class="text-center" style="font-size: 22px;">
+                                    <strong>RUC Nº: <span t-field="o.company_id.partner_id.vat"/></strong>
+                                </div>
+                                <div t-if="o.l10n_latam_document_type_id" class="text-center" style="font-size: 22px; padding-top: 10px;">
+                                    <strong><t t-esc="o.l10n_latam_document_type_id.name.upper()"/> ELECTRÓNICA</strong>
+                                </div>
+                                <div t-if="' ' in o.name" class="text-center" style="font-size: 22px; padding-top: 10px;">
+                                    <strong><t t-esc="o.name.split(' ')[1]"/></strong>
+                                </div>
+                            </div>
+                        </div>
+                        <img t-att-src="'best_appliances_custom/static/src/img/fondo.png'" style="position:fixed; z-index:-1; top:800px; padding-left:550px;"/>
+                    </div>
+                    <div class="page">
+                        <div t-if="o.l10n_latam_document_type_id.code == '08'">
+                            <span>
+                                Sirvase tomar nota que en la fecha hemos <strong>DEBITADO</strong> a su cuenta corriente lo siguiente:
+                            </span>
+                        </div>
+                        <div class="row">
+                            <t t-if="o.l10n_latam_document_type_id.code in ['01', '03', '07']">
+                                <div class="col-8">
+                                    Fecha de emisión: <span t-field="o.invoice_date"/>
+                                </div>
+                                <div class="col-4" style="padding-left: 0;">
+                                    Orden de Compra: <span t-field="o.invoice_origin"/>
+                                </div>
+                            </t>
+                        </div>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 10%;">Cliente:</td>
+                                    <td style="width: 60%;"><span t-field="o.partner_id.name"/></td>
+                                    <td style="width: 10%;"><span t-field="o.partner_id.l10n_latam_identification_type_id.name"/>:</td>
+                                    <td style="width: 20%;"><span t-field="o.partner_id.vat"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%;">Dirección:</td>
+                                    <td style="width: 60%;">
+                                        <span t-field="o.partner_id.street"/>
+                                        <span t-field="o.partner_id.l10n_pe_district.name"/>
+                                        <span t-field="o.partner_id.city_id.name"/>
+                                    </td>
+                                    <t t-if="o.l10n_latam_document_type_id.code in ['01', '03', '07']">
+                                        <td style="width: 10%;">Guía:</td>
+                                        <t t-set="guia" t-value=""/>
+                                        <t t-if="o.invoice_origin">
+                                            <t t-set="picking" t-value="request.env['stock.picking'].search([('sale_id.name', '=', o.invoice_origin), ('state', '!=', 'cancel')])"/>
+                                            <t t-if="picking">
+                                                <t t-set="guia" t-value="picking[0].name"/>
+                                            </t>
+                                        </t>
+                                        <td style="width: 20%;"><t t-esc="guia"/></td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="width: 10%;">Fecha:</td>
+                                        <td style="width: 20%;"><span t-field="o.invoice_date"/></td>
+                                    </t>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="width: 100%; height: 10px; border-left: 1px solid black !important; border-right: 1px solid black !important;"/>
+                        <t t-set="forma_pago" t-value="'Crédito'"/>
+                        <t t-if="not o.invoice_date_due or o.invoice_date_due == o.invoice_date">
+                            <t t-set="forma_pago" t-value="'Contado'"/>
+                        </t>
+                        <table t-if="o.l10n_latam_document_type_id.code in ['01', '03']" class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tr>
+                                <td style="padding-bottom: 0;">Forma de Pago</td>
+                                <td style="padding-bottom: 0;">Vencimiento</td>
+                                <td style="padding-bottom: 0;">Vendendor</td>
+                            </tr>
+                            <tr>
+                                <td style="padding-top: 0;"><t t-esc="forma_pago"/></td>
+                                <td style="padding-top: 0;"><span t-field="o.invoice_date_due"/></td>
+                                <td style="padding-top: 0;"><span t-field="o.invoice_user_id.name"/></td>
+                            </tr>
+                        </table>
+                        <table t-if="o.l10n_latam_document_type_id.code == '07'" class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <t t-set="doc_ref" t-value="request.env['account.move'].search([('name', 'ilike', o.l10n_latam_document_number), ('move_type', '=', 'out_invoice')], limit=1)"/>
+                            <tr>
+                                <td style="padding-bottom: 0;">Doc. de Referencia:</td>
+                                <td style="padding-bottom: 0;"><t t-esc="doc_ref.l10n_latam_document_type_id.name"/></td>
+                                <td style="padding-bottom: 0;">Cod. Tipo de Nota de Crédito:</td>
+                                <td style="padding-bottom: 0;"><t t-esc="o.l10n_pe_edi_refund_reason"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 0;">N° de Documento:</td>
+                                <td style="padding-bottom: 0;"><span t-field="o.l10n_latam_document_number"/></td>
+                                <td style="padding-bottom: 0;">Tipo de Nota de Crédito:</td>
+                                <td style="padding-bottom: 0;"><span t-field="o.l10n_pe_edi_refund_reason"/></td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 0;">Fecha de Emisión:</td>
+                                <td style="padding-bottom: 0;"><span t-field="o.invoice_date"/></td>
+                                <td style="padding-bottom: 0;"> </td>
+                                <td style="padding-bottom: 0;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="padding-bottom: 0;">Sustento:</td>
+                                <td style="padding-bottom: 0;"> </td>
+                                <td style="padding-bottom: 0;"> </td>
+                                <td style="padding-bottom: 0;"> </td>
+                            </tr>
+                        </table>
+                        <table t-if="o.l10n_latam_document_type_id.code == '08'" class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tr>
+                                <td style="width: 30%;">Sustento:</td>
+                                <td style="width: 70%;"> </td>
+                            </tr>
+                            <tr>
+                                <td style="width: 30%;">Referencia de Factura/Boleta:</td>
+                                <t t-if="' ' in o.debit_origin_id.name">
+                                    <td style="width: 70%;"><t t-esc="o.debit_origin_id.name.split(' ')[1]"/></td>
+                                </t>
+                                <t t-else="">
+                                    <td style="width: 70%;"> </td>
+                                </t>
+                            </tr>
+                        </table>
+                        <div style="width: 100%; height: 10px; border-left: 1px solid black !important; border-right: 1px solid black !important;"/>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tr>
+                                <td class="text-center" style="width: 8%; border-right: 1px solid black !important;">ITEM</td>
+                                <td class="text-center" style="width: 8%; border-right: 1px solid black !important;">CANT.</td>
+                                <td class="text-center" style="width: 16%; border-right: 1px solid black !important;">CÓDIGO</td>
+                                <td class="text-center" style="width: 44%; border-right: 1px solid black !important;">DESCRIPCIÓN</td>
+                                <td class="text-center" style="width: 12%; border-right: 1px solid black !important;">P.UNIT</td>
+                                <td class="text-center" style="width: 12%; border-right: 1px solid black !important;">TOTAL</td>
+                            </tr>
+                            <t t-set="item" t-value="1"/>
+                            <t t-set="tot_sin_dscto" t-value="0"/>
+                            <tr t-foreach="o.invoice_line_ids" t-as="l">
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><t t-esc="item"/></td>
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><t t-esc="'{:.2f}'.format(l.quantity)"/></td>
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.product_id.default_code"/></td>
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.product_id.name"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.price_unit"/></td>
+                                <td class="text-right" style="border-top: 1px solid black !important;"><t t-esc="'{:.2f}'.format(l.price_unit * l.quantity)"/></td>
+                                <t t-set="item" t-value="item + 1"/>
+                                <t t-set="tot_sin_dscto" t-value="tot_sin_dscto + (l.price_unit * l.quantity)"/>
+                            </tr>
+                            <tr>
+                                <td colspan="6" style="border-right: 1px solid black !important; border-top: 1px solid black !important;">SON: <span t-esc="o.currency_id.l10n_pe_edi_amount_to_text(o.amount_total)"/></td>
+                            </tr>
+                        </table>
+                        <div style="width: 100%; height: 20px; border-left: 1px solid black !important; border-right: 1px solid black !important;"/>
+                        <table class="table-sm" style="width: 100%; border-left: 1px solid black; border-right: 1px solid black; border-bottom: 1px solid black;">
+                            <tr>
+                                <td style="width: 57%; border-right: 1px solid black !important; border-top: 1px solid black !important;">Observaciones:</td>
+                                <td style="width: 3%; border-right: 1px solid black !important;"> </td>
+                                <td class="text-right" style="width: 16%; border-right: 1px solid black !important; border-top: 1px solid black !important;">Descuentos</td>
+                                <td class="text-right" style="width: 24%; border-top: 1px solid black !important;"><t t-esc="'{:.2f}'.format(tot_sin_dscto - o.amount_untaxed)"/></td>
+                            </tr>
+                            <tr>
+                                <td rowspan="3" style="border-right: 1px solid black !important;"><span t-field="o.narration"/></td>
+                                <td style="width: 3%; border-right: 1px solid black !important;"> </td>
+                                <td class="text-right" style="width: 16%; border-right: 1px solid black !important; border-top: 1px solid black !important;">Subtotal</td>
+                                <td class="text-right" style="width: 24%; border-top: 1px solid black !important;"><span t-field="o.amount_untaxed"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 3%; border-right: 1px solid black !important;"> </td>
+                                <td class="text-right" style="width: 16%; border-right: 1px solid black !important; border-top: 1px solid black !important;">IGV</td>
+                                <td class="text-right" style="width: 24%; border-top: 1px solid black !important;"><span t-field="o.amount_tax"/></td>
+                            </tr>
+                            <tr>
+                                <td style="width: 3%; border-right: 1px solid black !important;"> </td>
+                                <td class="text-right" style="width: 16%; border-right: 1px solid black !important; border-top: 1px solid black !important;">ImporteTotal</td>
+                                <td class="text-right" style="width: 24%; border-top: 1px solid black !important;"><span t-field="o.amount_total"/></td>
+                            </tr>
+                        </table>
+                        <table t-if="o.l10n_latam_document_type_id.code == '08'" class="table-sm" style="width: 100%">
+                            <tr>
+                                <td>
+                                    <span style="color: #4363AC;"><strong>COPIA SIN DERECHO A CREDITO FISCAL DEL I.G.V.</strong></span>
+                                </td>
+                                <td class="text-right">
+                                    <span style="color: #4363AC;"><strong>SUNAT</strong></span>
+                                </td>
+                            </tr>
+                        </table>
+                        <t t-set="spot" t-value="o._l10n_pe_edi_get_spot()"/>
+                        <div class="row" style="padding-top: 15px;">
+                            <div class="col-6">
+                                <t t-if="spot">
+                                    <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                                        <tr>
+                                            <td>Detracción:</td>
+                                            <td></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Cta.Cte.Banco de la Nación:</td>
+                                            <td><t t-esc="spot['PayeeFinancialAccount']"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Neto a Pagar:</td>
+                                            <td><t t-esc="'{:,.2f}'.format(o.amount_total)"/></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Detracción (<t t-esc="'{:,.2f}'.format(spot['PaymentPercent'])"/>%):</td>
+                                            <td><t t-esc="spot['Amount']"/></td>
+                                        </tr>
+                                    </table>
+                                </t>
+                            </div>
+                            <div class="col-6 text-right">
+                                <t t-if="' ' in o.name">
+                                    <t t-set="codigo_qr" t-value="'{0}|{1}|{2}|{3}|{4}|{5}|{6}|{7}|{8}'.format(o.company_id.partner_id.vat, str(int(o.l10n_latam_document_type_id.code)), o.name.split(' ')[1].split('-')[0], o.name.split(' ')[1].split('-')[1], o.amount_tax, o.amount_total, o.invoice_date.strftime('%Y-%m-%d'), str(int(o.partner_id.l10n_latam_identification_type_id.l10n_pe_vat_code)), o.partner_id.vat)"/>
+                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('QR', codigo_qr, 130, 130)"/>
+                                </t>
+                            </div>
+                        </div>
+                        <t t-set="_l10n_pe_edi_get_edi_values" t-value="o.line_ids.filtered(lambda l: l.account_internal_type == 'receivable')"/>
+                        <t t-set="first_time" t-value="True"/>
+                        <t t-set="correlativo" t-value="1"/>
+                        <div t-if="forma_pago == 'Crédito'" style="padding-top: 10px;" class="row">
+                            <div class="col-6">
+                                <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                                    <tr>
+                                        <td class="text-center" style="border-right: 1px solid black !important;">Crédito</td>
+                                        <td class="text-center" style="border-right: 1px solid black !important;">Fecha Venc.</td>
+                                        <td class="text-center" style="border-right: 1px solid black !important;">Cuota</td>
+                                        <td class="text-center" style="border-right: 1px solid black !important;">Monto a pagar</td>
+                                    </tr>
+                                    <tr t-foreach="_l10n_pe_edi_get_edi_values" t-as="l">
+                                        <t t-set="amount" t-value="l.amount_currency"/>
+                                        <t t-if="spot and first_time">
+                                            <t t-set="amount" t-value="amount - spot['spot_amount']"/>
+                                        </t>
+                                        <t t-set="first_time" t-value="False"/>
+                                        <td style="border-right: 1px solid black !important; border-top: 1px solid black !important;"> </td>
+                                        <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.date_maturity"/></td>
+                                        <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><t t-esc="'{0:03d}'.format(correlativo)"/></td>
+                                        <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><t t-esc="'{:,.2f}'.format(o.currency_id.round(amount))"/></td>
+                                        <t t-set="correlativo" t-value="correlativo + 1"/>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        <div t-if="o.l10n_latam_document_type_id.code in ['01', '03']" style="padding-top:30px">
+                            <span>Puede cancelar a través de nuestra cuenta:</span>
+                        </div>
+                        <div t-if="o.l10n_latam_document_type_id.code in ['01', '03']" class="row">
+                            <div class="col-6">
+                                <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                                    <tr><td><img t-att-src="'best_appliances_custom/static/src/img/bcp_logo.png'" style="height: 25px;"/></td></tr>
+                                    <tr><td style="padding-top: 5px; padding-bottom: 0; text-decoration: underline;"><span>Cuenta Soles Corriente</span></td></tr>
+                                    <tr><td style="padding-bottom: 0; padding-top: 0;"><span>Nro: 194-9847162-0-81</span></td></tr>
+                                    <tr><td style="padding-top: 0;"><span>CCI: 00219400984716208199</span></td></tr>
+                                    <tr><td style="padding-top: 5px; padding-bottom: 0; text-decoration: underline;"><span>Cuenta Dólares Corriente</span></td></tr>
+                                    <tr><td style="padding-bottom: 0; padding-top: 0;"><span>Nro: 194-9860324-1-40</span></td></tr>
+                                    <tr><td style="padding-top: 0;"><span>CCI: 00219400986032414091</span></td></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <div class="text-center" style="padding-bottom: 10px;">
+                            <span>
+                                ESTA FACTURA PUEDE SER CONSULTADA EN LA PAGINA WEB DE LA SUNAT CON SU CLAVE SOL<br/>
+                                O en http://e-consulta.sunat.gob.pe/cl-at-itconcompag/ccS01Alias
+                            </span>
+                        </div>
+                        <div style="height: 5px; background: #4363AC;"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="account_move_best_appliances_paperformat" model="report.paperformat">
+        <field name="name">Formato Best Appliances</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">50</field>
+        <field name="margin_bottom">18</field>
+        <field name="margin_left">7</field>
+        <field name="margin_right">7</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">45</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(6, 0, [ref('best_appliances_custom.account_move_best_appliances_report_action')])]"/>
+    </record>
+
+</odoo>

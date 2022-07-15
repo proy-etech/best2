@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <report id="sale_order_best_appliances_report_action"
+            string="Formato Best Appliances"
+            model="sale.order"
+            report_type="qweb-pdf"
+            name="best_appliances_custom.sale_order_best_appliances_report_template"
+            file="best_appliances_custom.sale_order_best_appliances_report_template"
+            print_report_name="'Cotización %s' % (object.name)"/>
+
+    <template id="sale_order_best_appliances_report_template">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.basic_layout">
+                    <div class="header">
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="text-center" style="padding-top:25px">
+                                    <div style="font-size: 25px;">
+                                        <span t-field="o.company_id.name"/>
+                                    </div>
+                                    <div t-if="o.company_id.partner_id.l10n_latam_identification_type_id and o.company_id.partner_id.vat" style="font-size: 20px;">
+                                        <span t-field="o.company_id.partner_id.l10n_latam_identification_type_id.name"/>
+                                        Nº: <span t-field="o.company_id.partner_id.vat"/>
+                                    </div>
+                                    <div t-if="o.company_id.partner_id.email" style="font-size: 20px;">
+                                        <span>ventas@best-appliances.net</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-6" style="height: 0px; border-left: 95px solid transparent; border-bottom: 150px solid #4363AC;">
+                                <div class="text-center" style="padding-top: 30px; color: white; font-size: 30px; padding-right: 10px;">
+                                    <div>
+                                        <span>COTIZACIÓN</span>
+                                    </div>
+                                    <div>
+                                        N° <span t-field="o.name"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <img t-att-src="'best_appliances_custom/static/src/img/fondo.png'" style="position:fixed; z-index:-1; top:800px; padding-left:550px;"/>
+                    </div>
+                    <div class="page" style="margin: 0 20px 0 20px;">
+                        <div>
+                            <span t-field="o.date_order"/>
+                        </div>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tbody>
+                                <tr>
+                                    <td style="width: 10%; padding-bottom: 0;">Cliente:</td>
+                                    <td style="width: 90%; padding-bottom: 0;"><span t-field="o.partner_id.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; padding-bottom: 0; padding-top: 0;"><span t-field="o.partner_id.l10n_latam_identification_type_id.name"/>:</td>
+                                    <td style="width: 90%; padding-bottom: 0; padding-top: 0;"><span t-field="o.partner_id.vat"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; padding-bottom: 0; padding-top: 0;">Contacto:</td>
+                                    <td style="width: 90%; padding-bottom: 0; padding-top: 0;"></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; padding-bottom: 0; padding-top: 0;">Dirección:</td>
+                                    <td style="width: 90%; padding-bottom: 0; padding-top: 0;"><span t-field="o.partner_id.street"/> - <span t-field="o.partner_id.l10n_pe_district.name"/></td>
+                                </tr>
+                                <tr>
+                                    <td style="width: 10%; padding-top: 0;">Teléfono:</td>
+                                    <td style="width: 90%; padding-top: 0;"><span t-field="o.partner_id.phone"/> <span t-field="o.partner_id.mobile"/></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div style="width: 100%; height: 10px; border-left: 1px solid black !important; border-right: 1px solid black !important;"/>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tr>
+                                <td style="width: 65%; padding-top: 0; border-right: 1px solid black !important;">ATENCIÓN</td>
+                                <td style="width: 35%; padding-top: 0; padding-left: 10px;">FORMA DE PAGO</td>
+                            </tr>
+                            <tr>
+                                <td style="width: 65%; padding-top: 0; border-right: 1px solid black !important;"> </td>
+                                <td style="width: 35%; padding-top: 0; padding-left: 10px;"><span t-field="o.payment_term_id.name"/></td>
+                            </tr>
+                        </table>
+                        <div style="width: 100%; height: 10px; border-left: 1px solid black !important; border-right: 1px solid black !important;"/>
+                        <table class="table-sm" style="width: 100%; border: 1px solid black;">
+                            <tr>
+                                <td class="text-center" style="border-right: 1px solid black !important; width: 8%;">ITEM</td>
+                                <td class="text-center" style="border-right: 1px solid black !important; width: 8%;">CANT</td>
+                                <td class="text-center" style="border-right: 1px solid black !important; width: 14%;">CÓDIGO</td>
+                                <td class="text-center" style="border-right: 1px solid black !important; width: 46%;">DESCRIPCIÓN</td>
+                                <td class="text-center" style="border-right: 1px solid black !important; width: 12%;">P.UNIT</td>
+                                <td class="text-center" style="width: 12%;">TOTAL</td>
+                            </tr>
+                            <t t-set="item" t-value="1"/>
+                            <t t-set="tot_sin_dscto" t-value="0"/>
+                            <tr t-foreach="o.order_line" t-as="l">
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><t t-esc="item"/></td>
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><t t-esc="'{:.2f}'.format(l.product_uom_qty)"/></td>
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.product_id.default_code"/></td>
+                                <td class="text-center" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.product_id.name"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="l.price_unit"/></td>
+                                <td class="text-right" style="border-top: 1px solid black !important;"><t t-esc="'{:.2f}'.format(l.price_unit * l.product_uom_qty)"/></td>
+                                <t t-set="item" t-value="item + 1"/>
+                                <t t-set="tot_sin_dscto" t-value="tot_sin_dscto + (l.price_unit * l.product_uom_qty)"/>
+                            </tr>
+                            <tr>
+                                <td colspan="4" style="border-right: 1px solid black !important; border-top: 1px solid black !important;">SON: <span t-esc="o.currency_id.l10n_pe_edi_amount_to_text(o.amount_total)"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; border-top: 1px solid black !important;">Descuentos</td>
+                                <td class="text-right" style="border-top: 1px solid black !important;"><t t-esc="'{:.2f}'.format(tot_sin_dscto - o.amount_untaxed)"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border-right: 1px solid #4363AC !important; border-top: 1px solid black !important; background-color: #4363AC; color: white;;">Vendedor:</td>
+                                <td colspan="2" style="border-right: 1px solid black !important;"><span t-field="o.user_id.name"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; border-top: 1px solid black !important;">Subtotal</td>
+                                <td class="text-right" style="border-top: 1px solid black !important;"><span t-field="o.amount_untaxed"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border-right: 1px solid #4363AC !important; border-top: 1px solid black !important; background-color: #4363AC; color: white;;">Email:</td>
+                                <td colspan="2" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="o.user_id.partner_id.email"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; border-top: 1px solid black !important;">IGV</td>
+                                <td class="text-right" style="border-top: 1px solid black !important;"><span t-field="o.amount_tax"/></td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" style="border-right: 1px solid #4363AC !important; border-top: 1px solid black !important; background-color: #4363AC; color: white;;">Teléfono:</td>
+                                <td colspan="2" style="border-right: 1px solid black !important; border-top: 1px solid black !important;"><span t-field="o.user_id.partner_id.mobile"/></td>
+                                <td class="text-right" style="border-right: 1px solid black !important; border-top: 1px solid black !important;">Importe Total</td>
+                                <td class="text-right" style="border-top: 1px solid black !important;"><span t-field="o.amount_total"/></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="footer">
+                        <div style="padding-bottom: 5px; padding-left: 20px;">
+                            <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                <center>
+                                    <i class="fa fa-envelope" aria-hidden="true" style="color: white"/>
+                                </center>
+                            </div>
+                            <div style="display: inline-block; padding-left: 20px;">
+                                <span t-field="o.company_id.partner_id.email"/>
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 5px; padding-left: 20px;">
+                            <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                <center>
+                                    <i class="fa fa-whatsapp" aria-hidden="true" style="color: white"/>
+                                </center>
+                            </div>
+                            <div style="display: inline-block; padding-left: 20px;">
+                                <span t-field="o.company_id.partner_id.mobile"/>
+                            </div>
+                        </div>
+                        <div style="padding-bottom: 5px; padding-left: 20px;">
+                            <div style="border-radius: 50%; background: #4363AC; width: 28px; height:28px; display: inline-block;">
+                                <center>
+                                    <i class="fa fa-map-marker" aria-hidden="true" style="color: white"/>
+                                </center>
+                            </div>
+                            <div style="display: inline-block; padding-left: 20px;">
+                                <span t-field="o.company_id.partner_id.street"/>
+                                <span t-field="o.company_id.partner_id.l10n_pe_district.name"/>
+                                <span t-field="o.company_id.partner_id.city_id.name"/>
+                                <span t-field="o.company_id.partner_id.state_id.name"/> -
+                                <span t-field="o.company_id.partner_id.country_id.name"/>
+                            </div>
+                        </div>
+                        <div style="height: 5px; background: #4363AC"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+
+    <record id="sale_order_best_appliances_paperformat" model="report.paperformat">
+        <field name="name">Formato Best Appliances</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="page_height">0</field>
+        <field name="page_width">0</field>
+        <field name="orientation">Portrait</field>
+        <field name="margin_top">40</field>
+        <field name="margin_bottom">25</field>
+        <field name="margin_left">0</field>
+        <field name="margin_right">0</field>
+        <field name="header_line" eval="False"/>
+        <field name="header_spacing">40</field>
+        <field name="dpi">90</field>
+        <field name="report_ids" eval="[(6, 0, [ref('best_appliances_custom.sale_order_best_appliances_report_action')])]"/>
+    </record>
+
+</odoo>
